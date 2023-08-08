@@ -1,0 +1,34 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "index.date": {
+                            "lt": "1704067200000",
+                            "gte": "1672531200000",
+                            "format": "epoch_millis"
+                        }
+                    }
+                },
+                {
+                    "terms": {
+                        "index.has_seal.exact": [
+                            "Yes"
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    "size": "200",
+    "from": 200,
+    "sort": [
+        {
+            "created_date": {
+                "order": "desc"
+            }
+        }
+    ],
+    "track_total_hits": true
+}
