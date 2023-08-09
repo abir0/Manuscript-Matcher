@@ -57,9 +57,8 @@ def main():
         EC.presence_of_element_located((By.ID, "cookie-consent-hide")))
     cookie_consent.click()
 
-    data = []
-
     while params_obj["from"] < (1250 * 200):
+        data = []
         # Get the cards from the search results
         try:
             WebDriverWait(driver, delay).until(
@@ -75,17 +74,17 @@ def main():
             if row is not None:
                 data.append(row)
         
+        # Save the data to a file
+        df = pd.DataFrame(data)
+        if params_obj["from"] == 0:
+            df.to_csv("../data/doaj_articles_data.csv", index=False)
+        else:
+            df.to_csv("../data/doaj_articles_data.csv", mode="a", header=False, index=False)
+
         # Update the page number
         update_params()
         params_obj = get_params()
         driver.get(url_encoder(params_obj))
-        
-        # Save the data to a file
-        df = pd.DataFrame(data)
-        if params_obj["from"] == 0:
-            df.to_csv("../data/doaj_articles_data.csv", header=True, index=False)
-        else:
-            df.to_csv("../data/doaj_articles_data.csv", mode="a", header=False, index=False)
 
     # Close the driver
     driver.quit()
