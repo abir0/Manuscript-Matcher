@@ -8,21 +8,23 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def read_page_no():
-    with open("page_no.json", "r") as file:
-        data = json.load(file)
-    return data["start"], data["end"]
-
-
-def write_page_no(start, end):
-    with open("page_no.json", "w") as file:
-        json.dump({"start": start, "end": end}, file)
-
-
 def get_params():
     with open("params.json", "r") as file:
         data = json.load(file)
     return data
+
+
+def update_params():
+    params = get_params()
+    params["from"] += 200
+    with open("params.json", "w") as file:
+        json.dump(params, file)
+
+
+def url_encoder(params):
+    url = "https://doaj.org/search/articles"
+    url += "?source=" + unquote(json.dumps(params))
+    return url
 
 
 def get_card_data(card):
@@ -31,30 +33,33 @@ def get_card_data(card):
         contents["Journal Name"] = card.text.split('\n')[0].strip()
         contents["Title"] = card.text.split('\n')[1].strip()
         contents["Keywords"] = card.text.split('\n')[4].strip()
+        card.find_element(
+            By.CLASS_NAME, "doaj-public-search-abstractaction-results").click()
+        contents["Abstract"] = card.find_element(
+            By.CLASS_NAME, "doaj-public-search-abstracttext-results").text.strip()
     except:
         return None
     return contents
 
 
 def main():
-    URL = "https://doaj.org/search/articles"
-
-    data_obj = get_params()
-    start, end = read_page_no()
-    data_obj["from"] = start * int(data_obj["size"])
-
-    URL += "?source=" + unquote(json.dumps(data_obj))
+    # Get the params
+    params_obj = get_params()
 
     # Initialize the driver
     driver = webdriver.Chrome()
-
-    data = []
+    driver.get(url_encoder(params_obj))
 
     delay = 10  # seconds
 
-    while start < end:
-        driver.get(URL)
+    # Cookie consent clicker
+    cookie_consent = WebDriverWait(driver, delay).until(
+        EC.presence_of_element_located((By.ID, "cookie-consent-hide")))
+    cookie_consent.click()
 
+    data = []
+
+    while params_obj["from"] < (1250 * 200):
         # Get the cards from the search results
         try:
             WebDriverWait(driver, delay).until(
@@ -66,17 +71,21 @@ def main():
         
         # Iterate over the card elements
         for card in cards:
-            data.append(get_card_data(card))
-
-        break # TODO: Remove this break
+            row = get_card_data(card)
+            if row is not None:
+                data.append(row)
         
         # Update the page number
-        start += 1
-        write_page_no(start, end)
+        update_params()
+        params_obj = get_params()
+        driver.get(url_encoder(params_obj))
         
-    # Save the data to a file
-    df = pd.DataFrame(data)
-    df.to_csv("../data/doaj_articles_data.csv", index=False)
+        # Save the data to a file
+        df = pd.DataFrame(data)
+        if params_obj["from"] == 0:
+            df.to_csv("../data/doaj_articles_data.csv", header=True, index=False)
+        else:
+            df.to_csv("../data/doaj_articles_data.csv", mode="a", header=False, index=False)
 
     # Close the driver
     driver.quit()
