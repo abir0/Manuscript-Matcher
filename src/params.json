@@ -1,1 +1,1 @@
-{"query": {"bool": {"must": [{"range": {"index.date": {"lt": "1704067200000", "gte": "1672531200000", "format": "epoch_millis"}}}, {"terms": {"index.has_seal.exact": ["Yes"]}}]}}, "size": "200", "from": 0, "sort": [{"created_date": {"order": "desc"}}], "track_total_hits": true}
+{"query": {"bool": {"must": [{"terms": {"index.schema_codes_tree.exact": ["LCC:HF5001-6182"]}}]}}, "size": "50", "from": 800, "sort": [{"created_date": {"order": "desc"}}], "track_total_hits": true}

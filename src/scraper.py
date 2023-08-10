@@ -48,16 +48,18 @@ def main():
 
     # Initialize the driver
     driver = webdriver.Chrome()
+
     driver.get(url_encoder(params_obj))
 
-    delay = 10  # seconds
+    # Delay for the element to load
+    delay = 20  # seconds
 
-    # Cookie consent clicker
+    # Dismiss the cookie consent
     cookie_consent = WebDriverWait(driver, delay).until(
         EC.presence_of_element_located((By.ID, "cookie-consent-hide")))
     cookie_consent.click()
 
-    while params_obj["from"] < (1250 * 200):
+    while params_obj["from"] <= (50 * 200):
         data = []
         # Get the cards from the search results
         try:
@@ -76,15 +78,16 @@ def main():
         
         # Save the data to a file
         df = pd.DataFrame(data)
-        if params_obj["from"] == 0:
-            df.to_csv("../data/doaj_articles_data.csv", index=False)
-        else:
-            df.to_csv("../data/doaj_articles_data.csv", mode="a", header=False, index=False)
+        df.to_csv("../data/doaj_articles_data.csv", mode="a", header=False, index=False)
 
         # Update the page number
         update_params()
         params_obj = get_params()
         driver.get(url_encoder(params_obj))
+
+    # Log the params
+    with open("../data/log.txt", "a") as file:
+        file.write(str(params_obj) + "\n")
 
     # Close the driver
     driver.quit()
