@@ -17,6 +17,8 @@
 - [About The Project](#about-the-project)
   - [Data Collection](#data-collection)
   - [Model Training](#model-training)
+    - [Model Architecture](#model-architecture)
+    - [Model Evaluation](#model-evaluation)
   - [App Deployment](#app-deployment)
 - [Built With](#built-with)
 - [Steps to Reproduce](#steps-to-reproduce)
@@ -42,7 +44,22 @@ The primary data collection was done by scraping the [Directory of Open Access J
 
 ### Model Training
 
-The model training is done using the [DistilRoBERTa](https://huggingface.co/distilroberta-base) model from Hugging Face Transformers library. This is pre-trained model which is follows the BERT model architecture but it is a distilled version. This model is integrated into the project by transfer learning. After processing and tokenization of the input text data, it is fed into the model. The model training and fine-tuning is performed in the [model training notebook](notebooks/Manuscript_Matcher_Model_Training.ipynb). Then the model is quantized and compressed using ONNX Runtime in the [model inference notebook](notebooks/Manuscript_Matcher_ONNX_Inference.ipynb) and exported as the final model in `.onnx` file, which can be found in the Hugging Face Spaces repo. Hugging Face Transformers, PyTorch, fastai, and finally ONNX Runtime frameworks have been used for model training to exporting. The model is trained in Google Colab.
+The model training is done using the [DistilRoBERTa](https://huggingface.co/distilroberta-base) model from Hugging Face Transformers library. This is pre-trained model which is follows the BERT model architecture but it is a distilled version. This model is integrated into the project by transfer learning. After processing and tokenization of the input text data, it is fed into the model. The model training and fine-tuning is performed in the [model training notebook](notebooks/Manuscript_Matcher_Model_Training.ipynb). Then the model is quantized and compressed using ONNX Runtime in the [model inference notebook](notebooks/Manuscript_Matcher_ONNX_Inference.ipynb) and exported as the final model in `.onnx` file, which can be found in the Hugging Face Spaces repo. Hugging Face Transformers, PyTorch, fastai, and finally ONNX Runtime frameworks have been used for model training to exporting.
+
+#### Model Architecture
+
+The final model had the following architecture:
+ - Input Layer (Tokenizer)
+ - DistilRoBERTa Model (Similar to Transformer architecture)
+ - Linear Layer
+ - Sigmoid Activation Layer
+ - Output Layer
+
+#### Model Evaluation
+
+After training, the model accuracy was ~97% and the train loss was ~0.03 while the validation loss was ~0.06. The model was trained for a total of 10 epochs. The model was trained on the Google Colab GPU. The model training took about 1 hour and 30 minutes.
+
+After ONNX Runtime quantization and compression, the model size was reduced from ~315 MB to ~79 MB. The final F1 scores were: F1 Macro = 0.68 and F1 Micro = 0.58.
 
 <p align="center">
   <img src="images/model.png" width="400" /><br>
