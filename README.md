@@ -63,6 +63,8 @@ The final model is hosted on the Hugging Face Spaces. A web app with minimal UI 
   <i>Deployed Web App </i>
 </p>
 
+The deployed app can be accessed HERE: [https://manuscript-matcher-beta.onrender.com](https://manuscript-matcher-beta.onrender.com)
+
 > Note: The app is still in beta version. It does not suggests the best matching journals yet. It only classifies the manuscript into `subject categories`. The best matching journals feature will be added in the future.
 
 
