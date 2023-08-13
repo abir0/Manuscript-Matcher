@@ -16,9 +16,9 @@
 
 - [About The Project](#about-the-project)
   - [Data Collection](#data-collection)
+    - [Dataset Description](#dataset-description)
   - [Model Training](#model-training)
-    - [Model Architecture](#model-architecture)
-    - [Model Evaluation](#model-evaluation)
+    - [Model Description](#model-description)
   - [App Deployment](#app-deployment)
 - [Built With](#built-with)
 - [Steps to Reproduce](#steps-to-reproduce)
@@ -37,6 +37,16 @@ Match Manuscript is a Multi-label Text Classification project to classify a manu
 
 The primary data collection was done by scraping the [Directory of Open Access Journals (DOAJ)](https://doaj.org/). DOAJ is an index or database of journals and articles' metadata. From this website, the `journal name`, article's `title` and `abstract` fields were extracted. The scraping was done using Selenium framework. A secondary dataset was collected from my previous project on [Journal Ranking](https://github.com/abir0/SJR-Journal-Ranking). This dataset had the journal's `subject category` information. The final data for training was obtained after cleaning and processing and merging the datasets. This data pre-processing is performed in the [data processing notebook](notebooks/Manuscript_Matcher_Data_Preprocessing.ipynb) on Google Colab.
 
+#### Dataset Description
+
+The final dataset had the following fields:
+ - Journal Name
+ - Title
+ - Abstract
+ - Subject Category
+
+The dataset had a total of 35k+ rows. And there were 61 labels in the `subject category` field.
+
 <p align="center">
   <a href="https://doaj.org/"><img src="images/doaj.png" width="800" /></a><br>
   <i>DOAJ Website</i>
@@ -46,7 +56,7 @@ The primary data collection was done by scraping the [Directory of Open Access J
 
 The model training is done using the [DistilRoBERTa](https://huggingface.co/distilroberta-base) model from Hugging Face Transformers library. This is pre-trained model which is follows the BERT model architecture but it is a distilled version. This model is integrated into the project by transfer learning. After processing and tokenization of the input text data, it is fed into the model. The model training and fine-tuning is performed in the [model training notebook](notebooks/Manuscript_Matcher_Model_Training.ipynb). Then the model is quantized and compressed using ONNX Runtime in the [model inference notebook](notebooks/Manuscript_Matcher_ONNX_Inference.ipynb) and exported as the final model in `.onnx` file, which can be found in the Hugging Face Spaces repo. Hugging Face Transformers, PyTorch, fastai, and finally ONNX Runtime frameworks have been used for model training to exporting.
 
-#### Model Architecture
+#### Model Description
 
 The final model had the following architecture:
  - Input Layer (Tokenizer)
@@ -54,8 +64,6 @@ The final model had the following architecture:
  - Linear Layer
  - Sigmoid Activation Layer
  - Output Layer
-
-#### Model Evaluation
 
 After training, the model accuracy was ~97% and the train loss was ~0.03 while the validation loss was ~0.06. The model was trained for a total of 10 epochs. The model was trained on the Google Colab GPU. The model training took about 1 hour and 30 minutes.
 
