@@ -1,39 +1,26 @@
 
-
-<!-- PROJECT LOGO -->
-<p align="center">
-  <a href="#">
-    <img src="#" alt="Logo" width="80" height="80">
-  </a>
-
-  <h2 align="center">Manuscript Matcher</h2>
-
-  <p align="center">
-    A NLP Text Classification Project to match manuscripts or research articles with journals based on the title and abstract of the manuscript.
-  </p>
-</p>
-
-
+<!-- PROJECT INTRO -->
+<h2 align="center">Manuscript Matcher</h2>
 
 <p align="center">
-  <img src="#" width="800" />
+  <img src="images/bg.png" width="800" />
 </p>
+<p align="center">
+    A Multi-label Text Classification Project to match manuscripts or research articles with suitable journals based on the title and abstract of the manuscript.
+</p>
+
 
 
 <!-- TABLE OF CONTENTS -->
-## Table of Contents
+<h3> Table of Contents </h3>
 
-- [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
   - [Data Collection](#data-collection)
   - [Model Training](#model-training)
-  - [Deployment](#deployment)
-  - [Demo](#demo)
-- [Dataset](#dataset)
+  - [App Deployment](#app-deployment)
 - [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+- [Steps to Reproduce](#steps-to-reproduce)
+- [Links](#links)
 - [License](#license)
 - [Contact](#contact)
  
@@ -41,29 +28,42 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-A NLP Text Classification Project to match manuscripts or research articles with journals based on the title and abstract of the manuscript. A dataset of 30k+ manuscript metadata is scraped from DOAJ and a dataset of 18k+ journals is taken from a Journal Ranking project. State-of-the-art NLP models such as BERT, RoBERTa, and DistilBERT are used to train the model. The model is deployed using Flask and Render. The project is divided into 3 parts: Data Collection, Model Training, and Deployment.
+Match Manuscript is a Multi-label Text Classification project to classify a manuscript or research article based on its subject category and with that it finds the best matching journals for the manuscript. It uses state-of-the-art Language Model DistilRoBERTa, a transformer model from Hugging Face. A large dataset is scraped, collected, and cleaned before the model was trained. The final model is then deployed as a web app on Render. The project can be divided into 3 main parts: Data Collection, Model Training, and Deployment.
+
 
 ### Data Collection
 
-The data collection is done in 2 parts. The first part is to collect the metadata of the journals from DOAJ. The second part is to collect the metadata of the journals from the Journal Ranking project. The data collection is done using the Scrapy framework. The data is then cleaned and preprocessed to remove any null values and duplicates.
+The primary data collection was done by scraping the [Directory of Open Access Journals (DOAJ)](https://doaj.org/). DOAJ is an index or database of journals and articles' metadata. From this website, the `journal name`, article's `title` and `abstract` fields were extracted. The scraping was done using Selenium framework. A secondary dataset was collected from my previous project on [Journal Ranking](https://github.com/abir0/SJR-Journal-Ranking). This dataset had the journal's `subject category` information. The final data for training was obtained after cleaning and processing and merging the datasets. This data pre-processing is performed in the [data processing notebook](notebooks/Manuscript_Matcher_Data_Preprocessing.ipynb) on Google Colab.
+
+<p align="center">
+  <a href="https://doaj.org/"><img src="images/doaj.png" width="800" /></a><br>
+  <i>DOAJ Website</i>
+</p>
 
 ### Model Training
 
-The model training is done using the Hugging Face Transformers library. The model is trained using the BERT, RoBERTa, and DistilBERT models. The model is trained using the title and abstract of the manuscript and the title of the journal. The model is trained using the PyTorch framework. The model is trained using the Google Colab platform.
+The model training is done using the [DistilRoBERTa](https://huggingface.co/distilroberta-base) model from Hugging Face Transformers library. This is pre-trained model which is follows the BERT model architecture but it is a distilled version. This model is integrated into the project by transfer learning. After processing and tokenization of the input text data, it is fed into the model. The model training and fine-tuning is performed in the [model training notebook](notebooks/Manuscript_Matcher_Model_Training.ipynb). Then the model is quantized and compressed using ONNX Runtime in the [model inference notebook](notebooks/Manuscript_Matcher_ONNX_Inference.ipynb) and exported as the final model in `.onnx` file, which can be found in the Hugging Face Spaces repo. Hugging Face Transformers, PyTorch, fastai, and finally ONNX Runtime frameworks have been used for model training to exporting. The model is trained in Google Colab.
 
-### Deployment
+<p align="center">
+  <img src="images/model.png" width="400" /><br>
+  <i>Transformer Model Architecture</i> (arXiv:1706.03762)
+</p>
 
-The model is deployed using the Flask framework. The model is deployed using the Render platform. The model is deployed using the Docker containerization platform.
+### App Deployment
 
-### Demo
+The final model is hosted on the Hugging Face Spaces. A web app with minimal UI is built around the hosted model using the Flask. The app is deployed on Render web services.
 
-The demo of the project is available at: https://manuscript-matcher.onrender.com/
+<p align="center">
+  <a href="https://abir0-manuscript-matcher.hf.space"><img src="images/gradio-app.png" width="800" /></a><br>
+  <i>Hugging Face Spaces App</i>
+</p>
 
+<p align="center">
+  <a href="https://manuscript-matcher-beta.onrender.com"><img src="images/flask-app.png" width="800" /></a><br>
+  <i>Deployed Web App </i>
+</p>
 
-<!-- DATASET -->
-## Dataset
-
-The dataset used in the project is available at: https://www.kaggle.com/
+> Note: The app is still in beta version. It does not suggests the best matching journals yet. It only classifies the manuscript into `subject categories`. The best matching journals feature will be added in the future.
 
 
 <!-- BUILT WITH -->
@@ -71,41 +71,65 @@ The dataset used in the project is available at: https://www.kaggle.com/
 
 * [Python](https://www.python.org/)
 * [Selenium](https://www.selenium.dev/)
+* [Pandas](https://pandas.pydata.org/)
 * [Hugging Face Transformers](https://huggingface.co/transformers/)
+* [Hugging Face Spaces](https://huggingface.co/spaces)
 * [PyTorch](https://pytorch.org/)
+* [fastai](https://www.fast.ai/)
+* [ONNX Runtime](https://onnxruntime.ai/)
 * [Flask](https://flask.palletsprojects.com/)
 * [Render](https://render.com/)
 
 
-## Getting Started
+## Steps to Reproduce
 
-To get a local copy up and running follow these simple steps.
+To reproduce the results, follow the steps below:
 
-### Prerequisites
-
-* Python
-* Selenium
-* Hugging Face Transformers
-* PyTorch
-* Flask
-* Render
-
-### Installation
-
-1. Clone the repo
+1. Clone the GitHub project repo.
 ```sh
-
+git clone https://github.com/abir0/Manuscript-Matcher.git
 ```
 
-2. Install Python packages
+2. Install the requirements.
 ```sh
-
+pip install -r requirements.txt
 ```
 
-3. Run the project
+3. Run the scraper to collect the data from DOAJ. The scraped data will be saved in the [data](data) folder.
 ```sh
-
+cd src
+python scraper.py
 ```
+
+4. Download all the data files from the [data](data) folder and place them in the Google Drive folder named `Manuscript-Matcher`.
+
+5. Go to the [data processing notebook](notebooks/Manuscript_Matcher_Data_Preprocessing.ipynb) and run all the cells to clean and preprocess the data.
+
+6. Go to the [model training notebook](notebooks/Manuscript_Matcher_Model_Training.ipynb) and run all the cells to train the model.
+
+7. Go to the [model inference notebook](notebooks/Manuscript_Matcher_ONNX_Inference.ipynb) and run all the cells to test, compress, and export the final model.
+
+8. Clone the [Hugging Face Spaces](https://huggingface.co/spaces/abir0/Manuscript-Matcher) repository and follow the steps to deploy the model on the Hugging Face Spaces platform.
+```sh
+git clone https://huggingface.co/spaces/abir0/Manuscript-Matcher
+```
+
+9.  Clone the [Flask web app](https://github.com/abir0/Manuscript-Matcher-Beta) repository .
+```sh
+git clone https://github.com/abir0/Manuscript-Matcher-Beta.git
+```
+
+10.   Deploy the web app on the Render platform.
+
+## Links
+
+- Manuscript Matcher Project: https://github.com/abir0/Manuscript-Matcher
+- DOAJ Website: https://doaj.org/
+- Journal Ranking Project: https://github.com/abir0/SJR-Journal-Ranking
+- Hugging Face Spaces: https://huggingface.co/spaces/abir0/Manuscript-Matcher
+- Hugging Face Spaces Direct Link: https://abir0-manuscript-matcher.hf.space
+- Flask Web App Repository: https://github.com/abir0/Manuscript-Matcher-Beta
+- Deployed Web App on Render: https://manuscript-matcher-beta.onrender.com
 
 
 <!-- OTHERS -->
@@ -113,4 +137,9 @@ To get a local copy up and running follow these simple steps.
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
+
 ## Contact
+
+<h3>Abir Hassan</h3>
+
+[Gmail](mailto:abir.spsc@gmail.com) | [GitHub](https://github.com/abir0) | [LinkedIn](https://www.linkedin.com/in/abir0/)
