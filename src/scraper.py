@@ -86,7 +86,7 @@ def main():
         driver.get(url_encoder(params_obj))
 
     # Log the params
-    with open("../data/log.txt", "a") as file:
+    with open("log.txt", "a") as file:
         file.write(str(params_obj) + "\n")
 
     # Close the driver
