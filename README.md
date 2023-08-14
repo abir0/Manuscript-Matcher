@@ -45,7 +45,7 @@ The final dataset had the following fields:
  - Abstract
  - Subject Category
 
-The dataset had a total of 35k+ rows. And there were 61 labels in the `subject category` field.
+The dataset had a total of 35k+ rows. And there were `61` labels in the `subject category` field, which is the multi-labelled target.
 
 <p align="center">
   <a href="https://doaj.org/"><img src="images/doaj.png" width="800" /></a><br>
@@ -65,7 +65,7 @@ The final model had the following architecture:
  - Sigmoid Activation Layer
  - Output Layer
 
-After training, the model accuracy was ~97% and the train loss was ~0.03 while the validation loss was ~0.06. The model was trained for a total of 10 epochs. The model was trained on the Google Colab GPU. The model training took about 1 hour and 30 minutes.
+After training, the model accuracy was ~97% and the train loss was ~0.03 while the validation loss was ~0.06. The model was trained for a total of 10 epochs. The model was trained on the Google Colab GPU.
 
 After ONNX Runtime quantization and compression, the model size was reduced from ~315 MB to ~79 MB. The final F1 scores were: F1 Macro = 0.68 and F1 Micro = 0.58.
 
@@ -90,7 +90,7 @@ The final model is hosted on the Hugging Face Spaces. A web app with minimal UI 
 
 The deployed app can be accessed HERE: [https://manuscript-matcher-beta.onrender.com](https://manuscript-matcher-beta.onrender.com)
 
-> Note: The app is still in beta version. It does not suggests the best matching journals yet. It only classifies the manuscript into `subject categories`. The best matching journals feature will be added in the future.
+> Note: The app is still in beta version. It does not suggest the best matching journals yet. It only classifies the manuscript into `subject categories`. The best matching journals feature will be added in the future.
 
 
 <!-- BUILT WITH -->
@@ -105,6 +105,7 @@ The deployed app can be accessed HERE: [https://manuscript-matcher-beta.onrender
 * [fastai](https://www.fast.ai/)
 * [ONNX Runtime](https://onnxruntime.ai/)
 * [Flask](https://flask.palletsprojects.com/)
+* [Bootstrap](https://getbootstrap.com/)
 * [Render](https://render.com/)
 
 
@@ -134,24 +135,24 @@ python scraper.py
 
 6. Go to the [model training notebook](notebooks/Manuscript_Matcher_Model_Training.ipynb) and run all the cells to train the model.
 
-7. Go to the [model inference notebook](notebooks/Manuscript_Matcher_ONNX_Inference.ipynb) and run all the cells to test, compress, and export the final model.
+7. Go to the [model inference notebook](notebooks/Manuscript_Matcher_ONNX_Inference.ipynb) and run all the cells to evaluate, quantize, and export the final model.
 
-8. Clone the [Hugging Face Spaces](https://huggingface.co/spaces/abir0/Manuscript-Matcher) repository and follow the steps to deploy the model on the Hugging Face Spaces platform.
+8. Clone the [Hugging Face Spaces](https://huggingface.co/spaces/abir0/Manuscript-Matcher) repository and download the final `.onnx` model into the repo and setup a Hugging Face Space to host the model.
 ```sh
 git clone https://huggingface.co/spaces/abir0/Manuscript-Matcher
 ```
 
-9.  Clone the [Flask web app](https://github.com/abir0/Manuscript-Matcher-Beta) repository .
+1. Clone the [Flask web app](https://github.com/abir0/Manuscript-Matcher-Beta) repository and configure the Hugging Face Spaces API.
 ```sh
 git clone https://github.com/abir0/Manuscript-Matcher-Beta.git
 ```
 
-10.   Deploy the web app on the Render platform.
+1.  Setup a Render Web Service and deploy the flask web app on the Render platform.
 
 ## Links
 
 - Manuscript Matcher Project: https://github.com/abir0/Manuscript-Matcher
-- DOAJ Website: https://doaj.org/
+- DOAJ Articles Search Endpoint: https://doaj.org/search/articles
 - Journal Ranking Project: https://github.com/abir0/SJR-Journal-Ranking
 - Hugging Face Spaces: https://huggingface.co/spaces/abir0/Manuscript-Matcher
 - Hugging Face Spaces Direct Link: https://abir0-manuscript-matcher.hf.space
