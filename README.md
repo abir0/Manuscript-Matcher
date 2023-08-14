@@ -142,12 +142,12 @@ python scraper.py
 git clone https://huggingface.co/spaces/abir0/Manuscript-Matcher
 ```
 
-1. Clone the [Flask web app](https://github.com/abir0/Manuscript-Matcher-Beta) repository and configure the Hugging Face Spaces API.
+9. Clone the [Flask web app](https://github.com/abir0/Manuscript-Matcher-Beta) repository and configure the Hugging Face Spaces API.
 ```sh
 git clone https://github.com/abir0/Manuscript-Matcher-Beta.git
 ```
 
-1.  Setup a Render Web Service and deploy the flask web app on the Render platform.
+10.  Setup a Render Web Service and deploy the flask web app on the Render platform.
 
 ## Links
 
